@@ -371,16 +371,199 @@ footer {
 footer a { color: var(--sky); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
 footer a:hover { border-bottom-color: var(--sky-border); }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  header { padding: 18px 24px; }
-  .nav-links-row, .header-center { display: none; }
-  #hero, .page-wrap { padding-left: 24px; padding-right: 24px; }
-  .grid-2, .grid-3 { grid-template-columns: 1fr; }
-  .affil-block { gap: 28px; }
-  .pub-item { grid-template-columns: 50px 1fr; }
+/* hero top row — desktop: photo is absolute, so this is just a normal block */
+.hero-top-row { display: block; }
+.hero-photo-mobile { display: none; } /* hidden on desktop/tablet */
+
+/* =========== HAMBURGER MENU =========== */
+.hamburger {
+  display: none;
+  flex-direction: column; gap: 5px; cursor: crosshair;
+  background: none; border: none; padding: 4px;
+}
+.hamburger span {
+  display: block; width: 22px; height: 1.5px;
+  background: var(--white); transition: all 0.3s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none;
+  position: fixed; top: 61px; left: 0; right: 0; z-index: 199;
+  background: rgba(245,249,252,0.98);
+  border-bottom: 1px solid var(--faint);
+  backdrop-filter: blur(14px);
+  flex-direction: column; padding: 0;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-size: 0.7rem; letter-spacing: 0.28em; color: var(--light);
+  text-transform: uppercase; text-decoration: none;
+  padding: 16px 24px; border-bottom: 1px solid var(--faint);
+  transition: color 0.2s, background 0.2s;
+}
+.mobile-menu a:hover { color: var(--sky); background: var(--sky-dim); }
+
+/* =========== TABLET (max 1024px) =========== */
+@media (max-width: 1024px) {
+  .header-center { display: none; }
+
+  /* Hero photo: smaller on tablet */
+  .hero-photo-wrap { top: 110px !important; right: 24px !important; }
+  .hero-photo-wrap img { width: 160px !important; height: 200px !important; }
+  .hero-photo-wrap > div:last-child { width: 160px !important; }
+
+  #hero { padding: 130px 32px 0; }
+  .page-wrap { padding: 100px 32px 60px; }
+
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+
+  .stats-strip { flex-wrap: wrap; }
+  .stat-item { flex: 1 1 33%; border-bottom: 1px solid var(--faint); min-width: 140px; }
+
+  footer { padding: 16px 32px; }
+}
+
+/* =========== MOBILE (max 768px) =========== */
+@media (max-width: 768px) {
+  /* Header */
+  header { padding: 16px 20px; }
+  .nav-links-row { display: none; }
+  .hamburger { display: flex; }
+
+  /* Hero: restructure for mobile */
+  #hero {
+    padding: 80px 20px 0;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: auto;
+    padding-bottom: 0;
+  }
+
+  /* Hide absolute desktop photo */
+  .hero-photo-wrap { display: none !important; }
+
+  /* Show mobile photo inline, next to title */
+  .hero-photo-mobile { display: flex !important; flex-direction: column; align-items: center; flex-shrink: 0; }
+
+  /* Side-by-side: title left, photo right */
+  .hero-top-row {
+    display: flex !important;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  /* Title takes remaining space */
+  .hero-top-row .hero-title {
+    flex: 1;
+    margin-bottom: 0;
+    font-size: clamp(2.4rem, 10vw, 3.6rem);
+    line-height: 0.95;
+  }
+
+  .hero-content { max-width: 100%; }
+  .eyebrow { margin-bottom: 16px; }
+  .eyebrow-text { font-size: 0.5rem; letter-spacing: 0.25em; }
+
+  .trust-badges { gap: 6px; margin-bottom: 20px; }
+  .badge { font-size: 0.5rem; padding: 5px 10px; letter-spacing: 0.15em; }
+
+  .hero-desc { font-size: 0.72rem; margin-bottom: 28px; max-width: 100%; letter-spacing: 0.02em; }
+
+  .cta-row { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .btn-sky { padding: 14px 28px; font-size: 0.65rem; width: 100%; justify-content: center; }
+  .btn-ghost { font-size: 0.6rem; }
+
+  /* Stats strip: 2 per row on mobile */
+  .stats-strip {
+    flex-wrap: wrap;
+    margin-top: 40px;
+  }
+  .stat-item {
+    flex: 1 1 50%;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--faint);
+    min-width: 0;
+  }
+  .stat-item:nth-child(even) { border-right: none; }
+  .stat-item:nth-child(odd) { border-right: 1px solid var(--faint); }
+  .stat-val { font-size: 1.7rem; }
+  .stat-label { font-size: 0.48rem; letter-spacing: 0.22em; }
+  .stat-sub { font-size: 0.52rem; }
+
+  /* Inner pages */
+  .page-wrap { padding: 76px 20px 48px; }
+
+  .page-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .page-tag { font-size: 0.5rem; padding: 8px 12px; letter-spacing: 0.18em; }
+
+  .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 2px; }
+
+  /* Publications */
+  .pub-item {
+    grid-template-columns: 44px 1fr;
+    padding: 16px 16px;
+    gap: 12px;
+  }
   .pub-badge { display: none; }
-  footer { padding: 16px 24px; flex-direction: column; gap: 8px; text-align: center; }
+  .pub-title { font-size: 0.72rem; }
+  .pub-journal { font-size: 0.62rem; }
+  .pub-year { font-size: 0.8rem; }
+
+  /* Research cards */
+  .research-card { padding: 20px; }
+  .research-num { font-size: 2rem; }
+
+  /* Patent cards */
+  .patent-card { padding: 22px 20px; }
+
+  /* Teaching */
+  .teaching-header { flex-direction: column; align-items: flex-start; gap: 12px; padding: 18px 20px; }
+  .subjects-wrap { padding: 18px 20px; }
+
+  /* Contact */
+  .affil-block { gap: 20px; padding: 20px; }
+  .affil-val { font-size: 0.7rem; }
+  .contact-links-block { padding: 20px; }
+  .profile-block { padding: 24px 20px; }
+
+  /* Info blocks */
+  .info-block { padding: 20px 20px; }
+  .block-text { font-size: 0.72rem; }
+  .big-quote { font-size: clamp(1rem, 4.5vw, 1.5rem); }
+
+  /* Footer */
+  footer {
+    padding: 16px 20px;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+    font-size: 0.5rem;
+  }
+
+  /* Back btn */
+  .back-btn { font-size: 0.54rem; margin-bottom: 14px; }
+
+  /* Sec label */
+  .sec-label { font-size: 0.5rem; letter-spacing: 0.28em; }
+}
+
+/* =========== SMALL MOBILE (max 400px) =========== */
+@media (max-width: 400px) {
+  .hero-top-row .hero-title { font-size: clamp(2rem, 11vw, 2.8rem); }
+  .hero-photo-mobile img { width: 84px !important; height: 108px !important; }
+  .hero-photo-mobile > div:last-child { width: 84px !important; }
+  .stat-item { flex: 1 1 100%; border-right: none !important; }
+  .badge { font-size: 0.46rem; padding: 4px 8px; }
 }
 </style>
 </head>
@@ -401,13 +584,27 @@ footer a:hover { border-bottom-color: var(--sky-border); }
     <a href="#" onclick="go('teaching');return false">Teaching</a>
     <a href="#" onclick="go('contact');return false">Contact</a>
   </nav>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+
+<!-- MOBILE MENU -->
+<nav class="mobile-menu" id="mobileMenu">
+  <a href="#" onclick="go('about');closeMenu();return false">About</a>
+  <a href="#" onclick="go('research');closeMenu();return false">Research</a>
+  <a href="#" onclick="go('publications');closeMenu();return false">Publications</a>
+  <a href="#" onclick="go('patents');closeMenu();return false">Patents</a>
+  <a href="#" onclick="go('teaching');closeMenu();return false">Teaching</a>
+  <a href="#" onclick="go('contact');closeMenu();return false">Contact</a>
+</nav>
 
 <!-- ============ HERO ============ -->
 <section id="hero" class="active">
   <div class="hero-bg-word">BIOTECH</div>
 
-  <div style="position:absolute;top:130px;right:48px;z-index:2;display:flex;flex-direction:column;align-items:center">
+  <!-- Desktop/tablet floating photo (absolute positioned) -->
+  <div class="hero-photo-wrap" style="position:absolute;top:130px;right:48px;z-index:2;display:flex;flex-direction:column;align-items:center">
     <div style="position:relative">
       <div style="position:absolute;inset:-8px;border:1px solid var(--sky-border);pointer-events:none"></div>
       <div style="position:absolute;inset:-16px;border:1px solid rgba(42,157,191,0.1);pointer-events:none"></div>
@@ -424,10 +621,23 @@ footer a:hover { border-bottom-color: var(--sky-border); }
       <span class="eyebrow-text">Faculty · Biotechnology · Ahmedabad, Gujarat, India</span>
     </div>
 
-    <h1 class="hero-title">
-      Dr. Jemi<br>
-      <span class="sky-stroke italic">Gandhi</span>
-    </h1>
+    <!-- Mobile: name + photo side by side -->
+    <div class="hero-top-row">
+      <h1 class="hero-title">
+        Dr. Jemi<br>
+        <span class="sky-stroke italic">Gandhi</span>
+      </h1>
+      <!-- Mobile-only photo (right of name) -->
+      <div class="hero-photo-mobile">
+        <div style="position:relative">
+          <div style="position:absolute;inset:-6px;border:1px solid var(--sky-border);pointer-events:none;z-index:0"></div>
+          <img src="profile.jpg" alt="Dr. Jemi Gandhi" style="width:100px;height:128px;object-fit:cover;object-position:top center;display:block;filter:grayscale(15%) contrast(1.08);position:relative;z-index:1;">
+        </div>
+        <div style="width:100px;border:1px solid var(--faint);border-top:none;background:var(--dim);padding:6px 8px;text-align:center">
+          <div style="font-size:0.42rem;letter-spacing:0.18em;color:var(--sky);text-transform:uppercase;line-height:1.4">Asst. Prof.<br>Biotechnology</div>
+        </div>
+      </div>
+    </div>
 
     <div class="trust-badges">
       <div class="badge"><span class="badge-dot"></span>Water Treatment</div>
@@ -747,17 +957,14 @@ footer a:hover { border-bottom-color: var(--sky-border); }
           </div>
           <span class="cl-arrow">→</span>
         </a>
-        <div class="contact-link" style="opacity:0.45;cursor:default">
+        <a href="mailto:jemi.gandhi@mgscience.ac.in" class="contact-link">
           <div class="cl-icon">📧</div>
           <div>
             <div>Email</div>
-            <div style="font-size:0.58rem;color:var(--dark);letter-spacing:0.1em;margin-top:3px">jemi.gandhi@mgscience.ac.in</div>
+            <div style="font-size:0.58rem;letter-spacing:0.1em;margin-top:3px">jemi.gandhi@mgscience.ac.in</div>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sec-label" style="margin-top:2px">Affiliation Details</div>
+          <span class="cl-arrow">→</span>
+        </a>
     <div class="affil-block" style="background:var(--dim);border:1px solid var(--faint);grid-column:1/-1;padding:28px 32px;display:flex;gap:60px;align-items:flex-start;flex-wrap:wrap">
       <div class="affil-item">
         <span class="affil-label">Institution</span>
@@ -793,6 +1000,19 @@ function go(id) {
   document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
+  closeMenu();
+}
+
+function toggleMenu() {
+  const btn  = document.getElementById('hamburger');
+  const menu = document.getElementById('mobileMenu');
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+
+function closeMenu() {
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
 }
 </script>
 </body>
