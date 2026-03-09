@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Jemi Gandhi — Faculty of Biotechnology</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --black: #f5f9fc;
+  --white: #0a0d12;
+  --gray: #e8f0f5;
+  --mid: #b0c4d4;
+  --light: #5a7080;
+  --faint: #dde8ef;
+  --dim: #eef4f8;
+  --sky: #2a9dbf;
+  --sky-dim: rgba(42,157,191,0.08);
+  --sky-border: rgba(42,157,191,0.28);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'IBM Plex Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* NOISE */
+.noise {
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.18;
+}
+
+/* SCANLINE */
+.scanline {
+  position: fixed; top: -5px; left: 0; width: 100%; height: 3px;
+  background: linear-gradient(transparent, rgba(42,157,191,0.05), transparent);
+  animation: scan 14s linear infinite; pointer-events: none; z-index: 9998;
+}
+@keyframes scan { to { top: 110vh; } }
+
+/* HEADER */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 48px;
+  border-bottom: 1px solid var(--faint);
+  background: rgba(245,249,252,0.97);
+  backdrop-filter: blur(14px);
+}
+
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem; letter-spacing: 0.2em; color: var(--white);
+}
+.logo .outline { color: transparent; -webkit-text-stroke: 1px var(--sky); }
+
+.header-center {
+  font-size: 0.56rem; letter-spacing: 0.38em; color: var(--light);
+  text-transform: uppercase; display: flex; align-items: center; gap: 12px;
+}
+.header-center::before, .header-center::after {
+  content: ''; display: block; width: 20px; height: 1px; background: var(--mid);
+}
+
+.nav-links-row { display: flex; gap: 28px; }
+.nav-links-row a {
+  font-size: 0.58rem; letter-spacing: 0.28em; color: var(--light);
+  text-transform: uppercase; text-decoration: none;
+  border-bottom: 1px solid transparent; padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-links-row a:hover { color: var(--sky); border-bottom-color: var(--sky-border); }
+
+/* SECTIONS */
+section { display: none; }
+section.active { display: block; }
+
+/* =========== HERO =========== */
+#hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 130px 48px 0; position: relative; overflow: hidden;
+}
+
+.hero-bg-word {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(80px, 16vw, 240px);
+  color: transparent; -webkit-text-stroke: 1px #d0dde6;
+  white-space: nowrap; pointer-events: none; user-select: none;
+  letter-spacing: 0.06em; z-index: 0;
+}
+
+.hero-content { position: relative; z-index: 1; max-width: 1000px; }
+
+.eyebrow {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
+  animation: fadeUp 0.7s ease both;
+}
+.eyebrow::before { content: ''; width: 30px; height: 1px; background: var(--sky); }
+.eyebrow-text { font-size: 0.58rem; letter-spacing: 0.4em; color: var(--sky); text-transform: uppercase; }
+
+.hero-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(3.2rem, 8.5vw, 8.5rem);
+  line-height: 0.92; font-weight: 400; letter-spacing: -0.02em;
+  margin-bottom: 36px;
+  animation: fadeUp 0.7s 0.08s ease both;
+}
+.hero-title .outline-text { color: transparent; -webkit-text-stroke: 1px var(--white); }
+.hero-title .sky-stroke { color: transparent; -webkit-text-stroke: 1px var(--sky); }
+.hero-title .italic { font-style: italic; }
+
+.trust-badges {
+  display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 36px;
+  animation: fadeUp 0.7s 0.16s ease both;
+}
+.badge {
+  border: 1px solid var(--faint); padding: 7px 14px;
+  font-size: 0.58rem; letter-spacing: 0.25em; color: var(--light); text-transform: uppercase;
+  display: flex; align-items: center; gap: 7px; transition: all 0.2s;
+}
+.badge:hover { border-color: var(--sky-border); color: var(--sky); }
+.badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--sky); }
+
+.hero-desc {
+  font-size: 0.78rem; line-height: 1.95; color: var(--light);
+  max-width: 540px; letter-spacing: 0.04em; margin-bottom: 48px;
+  animation: fadeUp 0.7s 0.24s ease both;
+}
+.hero-desc strong { color: var(--white); font-weight: 400; }
+
+.cta-row {
+  display: flex; align-items: center; gap: 20px;
+  animation: fadeUp 0.7s 0.32s ease both;
+}
+
+.btn-sky {
+  display: inline-flex; align-items: center; gap: 14px;
+  background: var(--sky); color: var(--black);
+  border: 1px solid var(--sky); padding: 18px 40px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  cursor: crosshair; transition: all 0.25s; position: relative; overflow: hidden;
+  text-decoration: none;
+}
+.btn-sky::after {
+  content: ''; position: absolute; inset: 0; background: #0a0d12;
+  transform: scaleX(0); transform-origin: right; transition: transform 0.3s ease;
+}
+.btn-sky:hover::after { transform: scaleX(1); transform-origin: left; }
+.btn-sky:hover { color: var(--sky); }
+.btn-sky span { position: relative; z-index: 1; }
+
+.btn-ghost {
+  font-size: 0.62rem; letter-spacing: 0.22em; color: var(--light);
+  text-transform: uppercase; cursor: crosshair;
+  background: none; border: none; border-bottom: 1px solid transparent;
+  padding-bottom: 2px; transition: color 0.2s, border-color 0.2s; text-decoration: none;
+}
+.btn-ghost:hover { color: var(--white); border-bottom-color: var(--mid); }
+
+/* STATS STRIP */
+.stats-strip {
+  border-top: 1px solid var(--faint); display: flex; overflow: hidden;
+  margin-top: 80px; animation: fadeUp 0.7s 0.4s ease both;
+}
+.stat-item {
+  flex: 1; padding: 24px 28px; border-right: 1px solid var(--faint);
+  display: flex; flex-direction: column; gap: 6px;
+  transition: background 0.2s; cursor: crosshair;
+}
+.stat-item:last-child { border-right: none; }
+.stat-item:hover { background: var(--faint); }
+.stat-label { font-size: 0.52rem; letter-spacing: 0.35em; color: var(--light); text-transform: uppercase; }
+.stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 0.1em; color: var(--sky); line-height: 1; }
+.stat-sub { font-size: 0.58rem; letter-spacing: 0.08em; color: var(--light); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =========== INNER PAGES =========== */
+.page-wrap { min-height: 100vh; padding: 110px 48px 80px; }
+
+.page-top {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  border-bottom: 1px solid var(--faint); padding-bottom: 28px; margin-bottom: 60px;
+}
+.page-heading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.8rem, 5vw, 4.2rem); letter-spacing: 0.12em; line-height: 1;
+}
+.page-heading .sky { color: var(--sky); }
+.page-tag {
+  display: flex; align-items: center; gap: 10px;
+  border: 1px solid var(--faint); padding: 10px 18px;
+  font-size: 0.56rem; letter-spacing: 0.28em; color: var(--light); text-transform: uppercase;
+}
+.pulse-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--sky);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.3; transform:scale(0.7); } }
+
+.sec-label {
+  font-size: 0.56rem; letter-spacing: 0.4em; color: var(--light);
+  text-transform: uppercase; padding: 20px 0 10px;
+  display: flex; align-items: center; gap: 12px; margin-bottom: 2px;
+}
+.sec-label::after { content: ''; flex: 1; height: 1px; background: var(--faint); }
+
+.back-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 0.58rem; letter-spacing: 0.25em; color: var(--light);
+  text-transform: uppercase; cursor: crosshair;
+  background: none; border: none; border-bottom: 1px solid transparent;
+  padding-bottom: 2px; transition: color 0.2s, border-color 0.2s; margin-bottom: 20px;
+}
+.back-btn:hover { color: var(--sky); border-bottom-color: var(--sky-border); }
+
+/* INFO BLOCKS */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 2px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-bottom: 2px; }
+
+.info-block {
+  background: var(--dim); border: 1px solid var(--faint); padding: 28px 32px;
+  transition: border-color 0.2s;
+}
+.info-block:hover { border-color: var(--mid); }
+.info-block.full { grid-column: 1 / -1; }
+.info-block.sky-left { border-left: 2px solid var(--sky); }
+
+.block-label {
+  font-size: 0.55rem; letter-spacing: 0.38em; color: var(--sky);
+  text-transform: uppercase; margin-bottom: 16px; display: block;
+}
+.block-text { font-size: 0.78rem; line-height: 1.9; color: var(--light); letter-spacing: 0.03em; }
+.block-text strong { color: var(--white); font-weight: 400; }
+
+.big-quote {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.9rem);
+  line-height: 1.3; color: var(--white); font-style: italic; margin-bottom: 14px;
+}
+.big-quote .sky { color: var(--sky); }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.chip {
+  border: 1px solid var(--faint); padding: 6px 14px;
+  font-size: 0.6rem; letter-spacing: 0.18em; color: var(--light); text-transform: uppercase;
+  transition: all 0.2s; cursor: crosshair;
+}
+.chip:hover { border-color: var(--sky-border); color: var(--sky); background: var(--sky-dim); }
+
+/* RESEARCH CARDS */
+.research-card {
+  background: var(--dim); border: 1px solid var(--faint); padding: 28px;
+  transition: all 0.2s; cursor: crosshair; position: relative; overflow: hidden;
+}
+.research-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--sky); transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
+}
+.research-card:hover::before { transform: scaleX(1); }
+.research-card:hover { background: var(--faint); }
+.research-num {
+  font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 0.06em;
+  line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--mid); margin-bottom: 14px;
+}
+.research-card h3 {
+  font-family: 'DM Serif Display', serif; font-size: 1rem; font-weight: 400;
+  color: var(--white); margin-bottom: 12px; line-height: 1.35;
+}
+.research-card p { font-size: 0.7rem; line-height: 1.85; color: var(--light); letter-spacing: 0.03em; }
+
+/* PUBLICATIONS */
+.pub-list { display: flex; flex-direction: column; gap: 2px; }
+.pub-item {
+  background: var(--dim); border: 1px solid var(--faint); border-left: 3px solid var(--faint);
+  padding: 24px 28px; display: grid; grid-template-columns: 60px 1fr auto;
+  align-items: start; gap: 20px; transition: all 0.2s; cursor: crosshair;
+}
+.pub-item:hover { border-left-color: var(--sky); background: var(--faint); }
+.pub-year { font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; letter-spacing: 0.15em; color: var(--sky); padding-top: 2px; }
+.pub-title { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em; color: var(--white); line-height: 1.5; margin-bottom: 8px; }
+.pub-journal { font-size: 0.67rem; letter-spacing: 0.08em; color: var(--light); font-style: italic; }
+.pub-badge {
+  padding: 4px 10px; border: 1px solid var(--sky-border); background: var(--sky-dim);
+  color: var(--sky); font-size: 0.52rem; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap;
+}
+
+/* PATENTS */
+.patent-card {
+  background: var(--dim); border: 1px solid var(--faint);
+  padding: 32px 28px; transition: all 0.2s; cursor: crosshair;
+  position: relative; overflow: hidden; display: flex; flex-direction: column;
+}
+.patent-card:hover { background: var(--faint); border-color: var(--mid); }
+.patent-card::after { content: '⚗'; position: absolute; bottom: -14px; right: 12px; font-size: 90px; opacity: 0.03; pointer-events: none; }
+.patent-status {
+  display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; margin-bottom: 20px;
+  font-size: 0.54rem; letter-spacing: 0.28em; text-transform: uppercase; width: fit-content;
+}
+.patent-status.accepted { border: 1px solid var(--sky-border); color: var(--sky); background: var(--sky-dim); }
+.patent-status.published { border: 1px solid var(--mid); color: var(--light); }
+.s-dot { width: 5px; height: 5px; border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+.patent-status.accepted .s-dot { background: var(--sky); }
+.patent-status.published .s-dot { background: var(--light); }
+.patent-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.05rem; font-weight: 400; line-height: 1.4; color: var(--white); margin-bottom: 20px; flex: 1; }
+.patent-num { font-size: 0.58rem; letter-spacing: 0.18em; color: var(--mid); border-top: 1px solid var(--faint); padding-top: 14px; }
+
+/* TEACHING */
+.teaching-block { background: var(--dim); border: 1px solid var(--faint); margin-bottom: 2px; overflow: hidden; }
+.teaching-header { display: flex; align-items: center; justify-content: space-between; padding: 24px 32px; border-bottom: 1px solid var(--faint); background: var(--faint); }
+.teaching-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.18em; color: var(--white); }
+.level-tag { border: 1px solid var(--sky-border); padding: 6px 14px; font-size: 0.54rem; letter-spacing: 0.28em; color: var(--sky); text-transform: uppercase; }
+.subjects-wrap { padding: 28px 32px; display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* CONTACT */
+.profile-block {
+  background: var(--dim); border: 1px solid var(--faint); padding: 36px 32px;
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px;
+}
+.profile-monogram {
+  width: 90px; height: 90px; border: 1px solid var(--mid);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 0.1em;
+  color: var(--sky); background: var(--faint);
+}
+.profile-name { font-family: 'DM Serif Display', serif; font-size: 1.35rem; font-weight: 400; color: var(--white); }
+.profile-role { font-size: 0.63rem; letter-spacing: 0.16em; color: var(--light); text-transform: uppercase; line-height: 1.8; }
+.contact-links-block { background: var(--dim); border: 1px solid var(--faint); padding: 32px; display: flex; flex-direction: column; gap: 2px; }
+.contact-link {
+  display: flex; align-items: center; gap: 14px; padding: 16px 18px; border: 1px solid var(--faint);
+  text-decoration: none; color: var(--white); font-size: 0.74rem; letter-spacing: 0.06em;
+  transition: all 0.2s; cursor: crosshair;
+}
+.contact-link:hover { border-color: var(--sky-border); background: var(--sky-dim); color: var(--sky); }
+.cl-icon { width: 32px; height: 32px; border: 1px solid var(--mid); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; transition: border-color 0.2s; }
+.contact-link:hover .cl-icon { border-color: var(--sky-border); }
+.cl-arrow { margin-left: auto; color: var(--light); font-size: 0.8rem; transition: transform 0.2s, color 0.2s; }
+.contact-link:hover .cl-arrow { transform: translateX(4px); color: var(--sky); }
+.affil-block {
+  background: var(--dim); border: 1px solid var(--faint); grid-column: 1/-1;
+  padding: 28px 32px; display: flex; gap: 60px; align-items: flex-start; flex-wrap: wrap;
+}
+.affil-item { display: flex; flex-direction: column; gap: 5px; }
+.affil-label { font-size: 0.52rem; letter-spacing: 0.35em; color: var(--sky); text-transform: uppercase; }
+.affil-val { font-size: 0.78rem; letter-spacing: 0.05em; color: var(--white); line-height: 1.5; }
+.affil-sub { font-size: 0.62rem; letter-spacing: 0.08em; color: var(--light); }
+
+/* FOOTER */
+footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 48px; border-top: 1px solid var(--faint);
+  font-size: 0.56rem; letter-spacing: 0.22em; color: var(--light);
+  background: var(--black); text-transform: uppercase;
+}
+footer a { color: var(--sky); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+footer a:hover { border-bottom-color: var(--sky-border); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  header { padding: 18px 24px; }
+  .nav-links-row, .header-center { display: none; }
+  #hero, .page-wrap { padding-left: 24px; padding-right: 24px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .affil-block { gap: 28px; }
+  .pub-item { grid-template-columns: 50px 1fr; }
+  .pub-badge { display: none; }
+  footer { padding: 16px 24px; flex-direction: column; gap: 8px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="scanline"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">DR. <span class="outline">GANDHI</span></div>
+  <div class="header-center">Biotechnology · M.G. Science Institute · Ahmedabad</div>
+  <nav class="nav-links-row">
+    <a href="#" onclick="go('about');return false">About</a>
+    <a href="#" onclick="go('research');return false">Research</a>
+    <a href="#" onclick="go('publications');return false">Publications</a>
+    <a href="#" onclick="go('patents');return false">Patents</a>
+    <a href="#" onclick="go('teaching');return false">Teaching</a>
+    <a href="#" onclick="go('contact');return false">Contact</a>
+  </nav>
+</header>
+
+<!-- ============ HERO ============ -->
+<section id="hero" class="active">
+  <div class="hero-bg-word">BIOTECH</div>
+
+  <div style="position:absolute;top:130px;right:48px;z-index:2;display:flex;flex-direction:column;align-items:center">
+    <div style="position:relative">
+      <div style="position:absolute;inset:-8px;border:1px solid var(--sky-border);pointer-events:none"></div>
+      <div style="position:absolute;inset:-16px;border:1px solid rgba(42,157,191,0.1);pointer-events:none"></div>
+      <img src="profile.jpg" alt="Dr. Jemi Gandhi" style="width:220px;height:280px;object-fit:cover;object-position:top center;display:block;filter:grayscale(15%) contrast(1.08);position:relative;z-index:1;">
+    </div>
+    <div style="width:220px;border:1px solid var(--faint);border-top:none;background:var(--dim);padding:12px 16px;text-align:center">
+      <div style="font-size:0.52rem;letter-spacing:0.3em;color:var(--sky);text-transform:uppercase;margin-bottom:3px">Dr. Jemi Gandhi</div>
+      <div style="font-size:0.49rem;letter-spacing:0.2em;color:var(--light);text-transform:uppercase">Asst. Prof. · Biotechnology</div>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="eyebrow">
+      <span class="eyebrow-text">Faculty · Biotechnology · Ahmedabad, Gujarat, India</span>
+    </div>
+
+    <h1 class="hero-title">
+      Dr. Jemi<br>
+      <span class="sky-stroke italic">Gandhi</span>
+    </h1>
+
+    <div class="trust-badges">
+      <div class="badge"><span class="badge-dot"></span>Water Treatment</div>
+      <div class="badge"><span class="badge-dot"></span>UVC LED Disinfection</div>
+      <div class="badge"><span class="badge-dot"></span>Env. Microbiology</div>
+      <div class="badge"><span class="badge-dot"></span>Frugal Science</div>
+      <div class="badge"><span class="badge-dot"></span>3 Patents</div>
+    </div>
+
+    <p class="hero-desc">
+      Assistant Professor of Biotechnology at <strong>M.G. Science Institute (Autonomous), Ahmedabad</strong> — affiliated with Gujarat University.
+      Pioneering UVC LED–based disinfection technologies to ensure <strong>safe drinking water</strong> through laboratory science with real-world environmental impact.
+    </p>
+
+    <div class="cta-row">
+      <a class="btn-sky" onclick="go('publications');return false" href="#"><span>View Publications →</span></a>
+      <button class="btn-ghost" onclick="go('contact')">Contact & Profiles</button>
+    </div>
+  </div>
+
+  <div class="stats-strip">
+    <div class="stat-item" onclick="go('publications')">
+      <span class="stat-label">Latest peer-reviewed Papers</span>
+      <span class="stat-val">03</span>
+      <span class="stat-sub">Chemosphere · CEJ · JWPE</span>
+    </div>
+    <div class="stat-item" onclick="go('patents')">
+      <span class="stat-label">Patents Filed</span>
+      <span class="stat-val">03</span>
+      <span class="stat-sub">1 Accepted · 2 Published</span>
+    </div>
+    <div class="stat-item" onclick="go('research')">
+      <span class="stat-label">Research Focus</span>
+      <span class="stat-val">H₂O</span>
+      <span class="stat-sub">Water quality & safety</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">PhD Institution</span>
+      <span class="stat-val">BITS Pilani  </span>
+      <span class="stat-sub">K K Birla Goa Campus </span>
+    </div>
+    <div class="stat-item" onclick="go('contact')">
+      <span class="stat-label">Collaborate</span>
+      <span class="stat-val" style="font-size:1.6rem;padding-top:4px">→</span>
+      <span class="stat-sub">Open to research partnerships</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <div class="page-wrap">
+    <button class="back-btn" onclick="go('hero')">← Back to Home</button>
+    <div class="page-top">
+      <div class="page-heading">About <span class="sky">Faculty</span></div>
+      <div class="page-tag"><div class="pulse-dot"></div> M.G. Science Institute</div>
+    </div>
+
+    <div class="sec-label">Profile</div>
+    <div class="grid-2">
+      <div class="info-block sky-left">
+        <span class="block-label">Academic Position</span>
+        <div class="block-text">
+          I am an <strong>Assistant Professor of Biotechnology</strong> at M. G. Science Institute (Autonomous), Ahmedabad, Gujarat, India — affiliated with <strong>Gujarat University</strong>.<br><br>
+          My academic work is concentrated on environmental microbiology, water quality and treatment, and UVC LED–based disinfection technologies for safe drinking water access.
+        </div>
+      </div>
+      <div class="info-block">
+        <span class="block-label">Research Vision</span>
+        <div class="big-quote">"Curiosity-driven exploration of ideas and <span class="sky">real-world scientific</span> impact."</div>
+        <div class="block-text">
+          My research bridges laboratory science and lived reality — building frugal, sustainable innovations that address pressing environmental challenges, particularly around safe water access.
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-label">Beyond Science</div>
+    <div class="info-block full" style="grid-column:1/-1">
+      <span class="block-label">Personal</span>
+      <div class="block-text" style="margin-bottom:18px">
+        Beyond the lab, I find balance and inspiration through music, travel, and nature. These passions fuel the curiosity and creativity I bring into scientific research and teaching.
+      </div>
+      <div class="chip-row">
+        <span class="chip">🎵 Music</span>
+        <span class="chip">✈️ Travel</span>
+        <span class="chip">🌿 Nature</span>
+        <span class="chip">💡 Frugal Innovation</span>
+        <span class="chip">🔬 Microbiology</span>
+        <span class="chip">💧 Water Science</span>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <span>designed by yashuu</span>
+    <span>Faculty of Biotechnology · M.G. Science Institute</span>
+    <span><button class="btn-ghost" onclick="go('hero')" style="font-size:0.52rem">↑ Top</button></span>
+  </footer>
+</section>
+
+<!-- ============ RESEARCH ============ -->
+<section id="research">
+  <div class="page-wrap">
+    <button class="back-btn" onclick="go('hero')">← Back to Home</button>
+    <div class="page-top">
+      <div class="page-heading">Research <span class="sky">Profile</span></div>
+      <div class="page-tag">Environmental · Water · Disinfection</div>
+    </div>
+
+    <div class="sec-label">Focus Areas</div>
+    <div class="grid-3">
+      <div class="research-card">
+        <div class="research-num">01</div>
+        <h3>Water Quality & Wastewater Treatment</h3>
+        <p>Investigating contamination pathways and developing efficient treatment strategies to ensure safe drinking water, with emphasis on real-world deployment in resource-limited contexts.</p>
+      </div>
+      <div class="research-card">
+        <div class="research-num">02</div>
+        <h3>UVC LED Photo-disinfection</h3>
+        <p>Advanced oxidation processes using UVC LED technology for inactivation of bacterial indicators in actual water systems — moving beyond laboratory models to real drinking water.</p>
+      </div>
+      <div class="research-card">
+        <div class="research-num">03</div>
+        <h3>Emerging Contaminant Abatement</h3>
+        <p>Degradation of pharmaceuticals such as Ampicillin via photo oxidation based methods. Toxicity assessment using ECOSAR and bioluminescence of emerging contaminants and degrdaded products.</p>
+      </div>
+      <div class="research-card">
+        <div class="research-num">04</div>
+        <h3>Environmental Microbiology</h3>
+        <p>Studying microbial communities in environmental systems — biofilm formation, pathogen ecology, and microbiological indicators used to assess water safety standards.</p>
+      </div>
+      <div class="research-card">
+        <div class="research-num">05</div>
+        <h3>Frugal Science & Sustainable Innovation</h3>
+        <p>Designing low-cost, accessible scientific solutions deployable in resource-constrained environments — making safe water technology available where it matters most.</p>
+      </div>
+      <div class="research-card" style="border-color:var(--sky-border);background:var(--sky-dim)">
+        <div class="research-num" style="-webkit-text-stroke:1px rgba(126,200,227,0.25)">→</div>
+        <h3 style="color:var(--sky)">Core Mission</h3>
+        <p>All research streams converge on one mission — safe, accessible, and affordable drinking water for communities everywhere and especially where it is needed most.</p>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <span>designed by yashuu</span>
+    <span>Faculty of Biotechnology · Gujarat University</span>
+    <span><button class="btn-ghost" onclick="go('hero')" style="font-size:0.52rem">↑ Top</button></span>
+  </footer>
+</section>
+
+<!-- ============ PUBLICATIONS ============ -->
+<section id="publications">
+  <div class="page-wrap">
+    <button class="back-btn" onclick="go('hero')">← Back to Home</button>
+    <div class="page-top">
+      <div class="page-heading">Latest Peer-Reviewed <span class="sky">Publications</span></div>
+      <div class="page-tag"><div class="pulse-dot"></div> Total 15 Published Works</div>
+    </div>
+
+    <div class="sec-label">Journal Articles</div>
+    <div class="pub-list">
+      <div class="pub-item">
+        <div class="pub-year">2024</div>
+        <div>
+          <div class="pub-title">Evaluation of inactivation of bacterial indicators in real drinking water using UVC LED</div>
+          <div class="pub-journal">Journal of Water Process Engineering</div>
+        </div>
+        <span class="pub-badge">Published</span>
+      </div>
+      <div class="pub-item">
+        <div class="pub-year">2024</div>
+        <div>
+          <div class="pub-title">Degradation of Ampicillin using persulfate and UVC LED</div>
+          <div class="pub-journal">Chemosphere</div>
+        </div>
+        <span class="pub-badge">Published</span>
+      </div>
+      <div class="pub-item">
+        <div class="pub-year">2023</div>
+        <div>
+          <div class="pub-title">Photo-disinfection processes for bacterial inactivation</div>
+          <div class="pub-journal">Chemical Engineering Journal Advances</div>
+        </div>
+        <span class="pub-badge">Published</span>
+      </div>
+    </div>
+
+    <div class="sec-label" style="margin-top:40px">External Profile</div>
+    <div class="info-block" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px">
+      <div class="block-text">View full publication list, citation metrics, and h-index on <strong>Google Scholar</strong>.</div>
+      <a href="https://scholar.google.com/citations?user=GaZAX6AAAAAJ" target="_blank" class="btn-sky"><span>Open Google Scholar →</span></a>
+    </div>
+  </div>
+  <footer>
+    <span>designed by yashuu</span>
+    <span>Faculty of Biotechnology · Gujarat University</span>
+    <span><button class="btn-ghost" onclick="go('hero')" style="font-size:0.52rem">↑ Top</button></span>
+  </footer>
+</section>
+
+<!-- ============ PATENTS ============ -->
+<section id="patents">
+  <div class="page-wrap">
+    <button class="back-btn" onclick="go('hero')">← Back to Home</button>
+    <div class="page-top">
+      <div class="page-heading">Patents &amp; <span class="sky">IP</span></div>
+      <div class="page-tag">1 Accepted · 2 Published</div>
+    </div>
+
+    <div class="sec-label">Intellectual Property</div>
+    <div class="grid-3">
+      <div class="patent-card">
+        <div class="patent-status accepted"><span class="s-dot"></span> Accepted</div>
+        <h3>UVC LED System for Water Treatment</h3>
+        <div class="patent-num">Application No. 202111046524</div>
+      </div>
+      <div class="patent-card">
+        <div class="patent-status published"><span class="s-dot"></span> Published</div>
+        <h3>Water Disinfection System</h3>
+        <div class="patent-num">Application No. 202411075521</div>
+      </div>
+      <div class="patent-card">
+        <div class="patent-status published"><span class="s-dot"></span> Published</div>
+        <h3>Water Disinfection Apparatus</h3>
+        <div class="patent-num">Application No. 202512084230</div>
+      </div>
+    </div>
+
+    <div class="sec-label" style="margin-top:16px">IP Note</div>
+    <div class="info-block sky-left">
+      <span class="block-label">Status</span>
+      <div class="block-text">
+        All three patents are filed with the <strong>Indian Patent Office</strong>. "Accepted" indicates grant of patent; "Published" indicates the application has been published and is currently under examination. Details are available through the official IP India portal.
+      </div>
+    </div>
+  </div>
+  <footer>
+    <span>designed by yashuu</span>
+    <span>Faculty of Biotechnology · Gujarat University</span>
+    <span><button class="btn-ghost" onclick="go('hero')" style="font-size:0.52rem">↑ Top</button></span>
+  </footer>
+</section>
+
+<!-- ============ TEACHING ============ -->
+<section id="teaching">
+  <div class="page-wrap">
+    <button class="back-btn" onclick="go('hero')">← Back to Home</button>
+    <div class="page-top">
+      <div class="page-heading">Teaching <span class="sky">Portfolio</span></div>
+      <div class="page-tag">Undergraduate Level</div>
+    </div>
+
+    <div class="sec-label">Courses & Focus Areas</div>
+    <div class="teaching-block">
+      <div class="teaching-header">
+        <div class="teaching-title">Undergraduate Biotechnology</div>
+        <div class="level-tag">B.S.</div>
+      </div>
+      <div class="subjects-wrap">
+        <span class="chip">Core Biotechnology Concepts</span>
+        <span class="chip">Laboratory Techniques</span>
+        <span class="chip">Applied Microbiology</span>
+        <span class="chip">Environmental Science</span>
+        <span class="chip">Water Treatment Principles</span>
+        <span class="chip">Research Methodology</span>
+        <span class="chip">Cell & Molecular Biology</span>
+        <span class="chip">Bioinformatics Basics</span>
+      </div>
+    </div>
+
+    <div class="sec-label" style="margin-top:16px">Philosophy</div>
+    <div class="info-block sky-left">
+      <span class="block-label">Teaching Approach</span>
+      <div class="block-text">
+        I believe in <strong>curiosity-led learning</strong> — connecting abstract concepts to tangible, real-world problems. Laboratory work is central to every course, encouraging students to develop both technical proficiency and scientific intuition. The goal is not just to teach biotechnology, but to inspire the next generation of scientists who ask bold questions.
+      </div>
+    </div>
+  </div>
+  <footer>
+    <span>designed by yashuu</span>
+    <span>Faculty of Biotechnology · Gujarat University</span>
+    <span><button class="btn-ghost" onclick="go('hero')" style="font-size:0.52rem">↑ Top</button></span>
+  </footer>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact">
+  <div class="page-wrap">
+    <button class="back-btn" onclick="go('hero')">← Back to Home</button>
+    <div class="page-top">
+      <div class="page-heading">Contact &amp; <span class="sky">Profiles</span></div>
+      <div class="page-tag"><div class="pulse-dot"></div> Open to Collaboration</div>
+    </div>
+
+    <div class="sec-label">Reach Out</div>
+    <div class="grid-2">
+      <div class="profile-block">
+        <img src="profile.jpg" alt="Dr. Jemi Gandhi" style="width:90px;height:90px;object-fit:cover;border:1px solid var(--mid);display:block;filter:grayscale(20%) contrast(1.05);">
+        <div class="profile-name">Dr. Jemi Gandhi</div>
+        <div class="profile-role">Assistant Professor<br>Department of Biotechnology<br>M.G. Science Institute, Ahmedabad</div>
+        <span class="chip" style="margin-top:6px">Open to Research Collaborations</span>
+      </div>
+      <div class="contact-links-block">
+        <span class="block-label" style="margin-bottom:16px">External Profiles</span>
+        <a href="https://scholar.google.com/citations?user=GaZAX6AAAAAJ" target="_blank" class="contact-link">
+          <div class="cl-icon">🎓</div>
+          <div>
+            <div>Google Scholar</div>
+            <div style="font-size:0.58rem;color:var(--light);letter-spacing:0.1em;margin-top:3px">Publications &amp; Citations</div>
+          </div>
+          <span class="cl-arrow">→</span>
+        </a>
+        <a href="https://www.linkedin.com/in/jemi-gandhi" target="_blank" class="contact-link">
+          <div class="cl-icon">💼</div>
+          <div>
+            <div>LinkedIn</div>
+            <div style="font-size:0.58rem;color:var(--light);letter-spacing:0.1em;margin-top:3px">jemi-gandhi</div>
+          </div>
+          <span class="cl-arrow">→</span>
+        </a>
+        <div class="contact-link" style="opacity:0.45;cursor:default">
+          <div class="cl-icon">📧</div>
+          <div>
+            <div>Email</div>
+            <div style="font-size:0.58rem;color:var(--dark);letter-spacing:0.1em;margin-top:3px">jemi.gandhi@mgscience.ac.in</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-label" style="margin-top:2px">Affiliation Details</div>
+    <div class="affil-block" style="background:var(--dim);border:1px solid var(--faint);grid-column:1/-1;padding:28px 32px;display:flex;gap:60px;align-items:flex-start;flex-wrap:wrap">
+      <div class="affil-item">
+        <span class="affil-label">Institution</span>
+        <span class="affil-val">M.G. Science Institute (Autonomous)</span>
+        <span class="affil-sub">Ahmedabad, Gujarat, India</span>
+      </div>
+      <div class="affil-item">
+        <span class="affil-label">University</span>
+        <span class="affil-val">Gujarat University</span>
+        <span class="affil-sub">Ahmedabad, Gujarat</span>
+      </div>
+      <div class="affil-item">
+        <span class="affil-label">Department</span>
+        <span class="affil-val">Biotechnology</span>
+        <span class="affil-sub">Faculty of Science</span>
+      </div>
+      <div class="affil-item">
+        <span class="affil-label">Research Area</span>
+        <span class="affil-val">Environmental Microbiology</span>
+        <span class="affil-sub">UVC LED · Water Treatment · AOP</span>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <span>designed by yashuu</span>
+    <span>Faculty of Biotechnology · M.G. Science Institute</span>
+    <span><button class="btn-ghost" onclick="go('hero')" style="font-size:0.52rem">↑ Top</button></span>
+  </footer>
+</section>
+
+<script>
+function go(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
